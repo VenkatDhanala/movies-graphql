@@ -6,7 +6,7 @@ const {
   GraphQLInt,
   GraphQLFloat
 } = require('graphql')
-const movies = require('./movies.json')
+const movies = require('./movies.json');
 
 const movie = new GraphQLObjectType({
   name: 'Movie',
@@ -34,7 +34,7 @@ const movie = new GraphQLObjectType({
       }))
     }
   }
-})
+});
 
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -66,5 +66,19 @@ module.exports = new GraphQLSchema({
         })
       }
     }
+  }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+      createMovie:{
+        type:movie,
+        args:{
+          title:{type:GraphQLString},
+          year:{type:GraphQLString}
+        },
+        resolve:(r, {title,year}) => movies.push({title,year})
+      } 
+    }
+    
   })
 })
