@@ -4,7 +4,8 @@ const {
   GraphQLList,
   GraphQLString,
   GraphQLInt,
-  GraphQLFloat
+  GraphQLFloat,
+  GraphQLInputObjectType
 } = require('graphql')
 const movies = require('./movies.json');
 
@@ -32,6 +33,27 @@ const movie = new GraphQLObjectType({
           }
         }
       }))
+    }
+  }
+});
+
+const inputMovieType = new GraphQLInputObjectType({
+  name: 'MovieInput',
+  fields: {
+    title: {
+      type: GraphQLString
+    },
+    cover: {
+      type: GraphQLString
+    },
+    year: {
+      type: GraphQLString
+    },
+    cost: {
+      type: GraphQLFloat
+    },
+    starring: {
+      type: new GraphQLList(GraphQLString)
     }
   }
 });
@@ -73,10 +95,23 @@ module.exports = new GraphQLSchema({
       createMovie:{
         type:movie,
         args:{
-          title:{type:GraphQLString},
-          year:{type:GraphQLString}
+          input:{type:inputMovieType}
         },
-        resolve:(r, {title,year}) => movies.push({title,year})
+        resolve:(r, args) => {
+          let movie = {
+            title: args.input.title,
+            cover: args.input.cover,
+            year: args.input.year,
+            cost: args.input.cost
+          }
+          let stars = []
+          args.input.starring.map(strName=>{
+            stars.push({name:strName})
+            console.log(strName)
+          })
+          movie.starring = stars;
+          movies.push(movie)
+        }
       } 
     }
     
