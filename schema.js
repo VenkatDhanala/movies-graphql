@@ -110,10 +110,10 @@ module.exports = new GraphQLSchema({
             console.log(strName)
           })
           movie.starring = stars;
-          movies.push(movie)
+          movies.push(movie);
+          return movie;
         }
       } 
-    }
-    
+    } 
   })
 })
